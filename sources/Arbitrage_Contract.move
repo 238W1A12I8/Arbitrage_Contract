@@ -6,7 +6,7 @@ module SendMessage::Arbitrage {
     use aptos_framework::event;
     use std::string::String;
 
-    /// Struct representing an arbitrage opportunity
+    
     struct ArbitrageOpportunity has store, key {
         price_source_a: u64,        // Price from first exchange/source
         price_source_b: u64,        // Price from second exchange/source
@@ -17,14 +17,14 @@ module SendMessage::Arbitrage {
         total_profit: u64,          // Total profit accumulated
     }
 
-    /// Global state for tracking arbitrage statistics
+    
     struct ArbitrageState has key {
         total_opportunities: u64,
         successful_trades: u64,
         total_volume: u64,
     }
 
-    /// Event structures for logging
+    
     struct OpportunityDetected has drop, store {
         owner: address,
         price_a: u64,
@@ -40,7 +40,7 @@ module SendMessage::Arbitrage {
         timestamp: u64,
     }
 
-    /// Error codes
+    
     const E_NOT_PROFITABLE: u64 = 1;
     const E_INSUFFICIENT_FUNDS: u64 = 2;
     const E_OPPORTUNITY_NOT_FOUND: u64 = 3;
@@ -49,7 +49,7 @@ module SendMessage::Arbitrage {
     const E_ALREADY_INITIALIZED: u64 = 6;
     const E_NOT_INITIALIZED: u64 = 7;
 
-    /// Function to detect arbitrage opportunity by comparing prices from two sources
+    
     public fun detect_opportunity(
         owner: &signer, 
         price_a: u64, 
@@ -73,7 +73,7 @@ module SendMessage::Arbitrage {
         move_to(owner, opportunity);
     }
 
-    /// Function to execute arbitrage trade if opportunity is profitable
+    
     public fun execute_arbitrage(
         trader: &signer, 
         opportunity_owner: address, 
@@ -81,10 +81,10 @@ module SendMessage::Arbitrage {
     ) acquires ArbitrageOpportunity {
         let opportunity = borrow_global_mut<ArbitrageOpportunity>(opportunity_owner);
         
-        // Check if opportunity is active and profitable
+        
         assert!(opportunity.is_active, E_NOT_PROFITABLE);
         
-        // Calculate potential profit
+        
         let price_diff = if (opportunity.price_source_a > opportunity.price_source_b) {
             opportunity.price_source_a - opportunity.price_source_b
         } else {
@@ -98,16 +98,17 @@ module SendMessage::Arbitrage {
                 opportunity.price_source_a
             };
         
-        // Execute trade by transferring funds
+        
         let trade_coins = coin::withdraw<AptosCoin>(trader, trade_amount);
         let profit_coins = coin::withdraw<AptosCoin>(trader, expected_profit);
         
-        // Simulate arbitrage execution (in real implementation, this would interact with DEXs)
+        
         coin::deposit<AptosCoin>(signer::address_of(trader), trade_coins);
         coin::deposit<AptosCoin>(signer::address_of(trader), profit_coins);
         
-        // Update opportunity status
+        
         opportunity.is_active = false;
         opportunity.last_updated = timestamp::now_seconds();
     }
+
 }
