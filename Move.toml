@@ -1,0 +1,15 @@
+[package]
+name = "Arbitrage_Contract"
+version = "1.0.0"
+authors = []
+
+[addresses]
+SendMessage="0xe5e9fdb70af4d46bd18e226a412121d8b4931467fd1fe66a5aed19da9b0aabcb"
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
